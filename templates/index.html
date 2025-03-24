@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Metro Rota Bulucu</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+  <h1>Metro Rota Bulucu</h1>
+
+  <form method="POST" class="form-container">
+    <label>Başlangıç:</label>
+    <select name="baslangic">
+      {% for ist in istasyonlar %}
+        <option value="{{ ist.idx }}">{{ ist.ad }}</option>
+      {% endfor %}
+    </select>
+
+    <label>Hedef:</label>
+    <select name="hedef">
+      {% for ist in istasyonlar %}
+        <option value="{{ ist.idx }}">{{ ist.ad }}</option>
+      {% endfor %}
+    </select>
+
+    <label>Rota Türü:</label>
+    <select name="rota_turu">
+      <option value="hizli">En Hızlı</option>
+      <option value="aktarma">En Az Aktarmalı</option>
+    </select>
+
+    <label>Yolculuk Saati:</label>
+    <input type="time" name="saat" value="{{ secilen_saat }}">
+      
+
+    <button type="submit">Rota Bul</button>
+  </form>
+
+  {% if tahmin %}
+  <div class="result-box">
+    <h3>📊 Kalabalık Tahmini</h3>
+    <p>{{ tahmin }}</p>
+  </div>
+{% endif %}
+
+
+  {% if rota %}
+  <h2 style="text-align:center;">Rota</h2>
+  <div class="horizontal-timeline">
+    {% for i in range(rota|length) %}
+      <div class="timeline-step">
+        {% if i == 0 %}
+            <i class="fa-solid fa-location-dot" style="color: rgb(137, 0, 0);"></i>
+        {% elif i == rota|length -1 %}
+          <div class="timeline-icon end">🎯</div>
+        {% elif rota[i].hat != rota[i-1].hat %}
+        aktarma
+            <i class="fa-solid fa-train" style="color: blue;"></i>
+        {% else %}
+            <i class="fa-regular fa-circle" style="font-size: 8px;"></i>
+        {% endif %}
+        <div class="timeline-label">{{ rota[i].ad }}</div>
+      </div>
+
+      {% if i < rota|length - 1 %}
+        <div class="timeline-line"></div>
+      {% endif %}
+
+    {% endfor %}
+  </div>
+
+  {% if rota_turu == 'hizli' %}
+    <p style="text-align: center;"><strong>Toplam Süre:</strong> {{ sure }} dakika</p>
+  {% endif %}
+{% endif %}
+
+
+  <h2>Harita:</h2>
+  <svg width="1200" height="580">
+    <!-- Bağlantılar -->
+    {% for ist in istasyonlar_json %}
+      {% for komsu in ist.komsular %}
+        {% if ist.idx < komsu.idx %}
+          <line x1="{{ ist.x }}" y1="{{ ist.y }}"
+                x2="{{ komsu.x }}" y2="{{ komsu.y }}"
+                stroke="{% if ist.idx in rota_ids and komsu.idx in rota_ids %}purple{% else %}{{ ist.renk }}{% endif %}"
+                stroke-width="{% if ist.idx in rota_ids and komsu.idx in rota_ids %}4{% else %}3{% endif %}" />
+        {% endif %}
+      {% endfor %}
+    {% endfor %}
+
+    <!-- İstasyonlar -->
+    {% for ist in istasyonlar_json %}
+      <circle cx="{{ ist.x }}" cy="{{ ist.y }}" r="7"
+              class="{% if ist.idx in rota_ids %}rota-circle{% else %}istasyon{% endif %}" fill="white" />
+        <text x="{{ ist.x }}" y="{{ ist.y - 12 }}" text-anchor="middle">{{ ist.ad }}</text>
+
+    {% endfor %}
+  </svg>
+</body>
+</html>
