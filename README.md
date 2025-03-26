@@ -1,6 +1,6 @@
 # Metro Rota Bulucu
 
-Ankara metrosu için geliştirilmiş bu web tabanlı uygulama, kullanıcıya **en hızlı** ya da **en az aktarmalı** metro rotasını bulma imkânı sunar. Bunun yanı sıra, yolculuk saatine göre **ChatGPT destekli kalabalık tahmini** de yapar. Kullanıcı dostu arayüzü ve detaylı metro ağı modellemesiyle Ankara için önemli bir akıllı ulaşım uygulaması prototipidir.
+Ankara metrosu için geliştirilmiş bu web tabanlı uygulama, kullanıcıya **en hızlı** ya da **en az aktarmalı** metro rotasını bulma imkânı sunar. Bunun yanı sıra, yolculuk saatine göre **ChatGPT destekli kalabalık tahmini** de yapar. Kullanıcı dostu arayüzü ve detaylı metro ağı modellemesiyle Ankara için bir akıllı ulaşım uygulaması prototipidir.
 ---
 ## 🔄 Akış Diyagramı
   ![Screenshot 2025-03-24 at 22 05 36](https://github.com/user-attachments/assets/394a82d3-9b7c-4f15-ac54-60a128fb575f)
